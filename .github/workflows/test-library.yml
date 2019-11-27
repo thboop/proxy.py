@@ -15,16 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
-        run: python --version
+        run: |
+          alias python=python3
+          alias pip=pip3
+          python --version
       - run: pip install -r requirements.txt
       - run: pip install -r requirements-testing.txt
       - name: Quality Check
         run: |
+          alias python=python3
+          alias pip=pip3
           flake8 --ignore=W504 --max-line-length=127 proxy/ tests/ setup.py
           mypy --strict --ignore-missing-imports proxy/ tests/ setup.py
       - name: Run Tests
-        run: pytest --cov=proxy tests/
-      - name: Upload coverage to Codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: codecov
+        run: |
+          alias python=python3
+          alias pip=pip3
+          pytest --cov=proxy tests/
