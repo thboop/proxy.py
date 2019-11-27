@@ -3,7 +3,7 @@ name: Proxy.py Docker
 on: [push]
 
 jobs:
-  build:
+  buildtest:
     runs-on: ${{ matrix.os }}-latest
     name: Docker - Python ${{ matrix.python }} on ${{ matrix.os }}
     strategy:
