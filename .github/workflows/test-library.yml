@@ -6,7 +6,6 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}-latest
     name: Library - Python ${{ matrix.python }} on ${{ matrix.os }}
-    strategy:
     steps:
       - uses: actions/checkout@v1
       - name: Setup Python
