@@ -6,27 +6,29 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}-latest
     name: Library - Python ${{ matrix.python }} on ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu]
+        python: [3.7]
+      max-parallel: 4
+      fail-fast: false
     steps:
       - uses: actions/checkout@v1
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}-dev
-      - run: |
-          alias pip=pip3
-          alias python=python3
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r requirements-testing.txt
-      - run: pip install -r requirements-testing.txt
       - name: Quality Check
         run: |
-          alias python=python3
           flake8 --ignore=W504 --max-line-length=127 proxy/ tests/ setup.py
           mypy --strict --ignore-missing-imports proxy/ tests/ setup.py
       - name: Run Tests
-        run: |
-          alias python=python3
-          pytest --cov=proxy tests/
+        run: pytest --cov=proxy tests/
       - name: Upload coverage to Codecov
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
